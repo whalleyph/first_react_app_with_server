@@ -25,6 +25,17 @@ function App() {
     }));
   }
 
+  async function handlePost() {
+    await axios.post(
+      "https://web-server-with-sql.onrender.com/messages",
+      newQuoteInfo
+    );
+    setNewQuoteInfo({
+      text: "",
+      author: "",
+    });
+  }
+
   return (
     <>
       <h1>Quotes Page</h1>
@@ -46,7 +57,7 @@ function App() {
           onChange={handleChange}
           name="author"
         ></input>
-        <button>Post Quote</button>
+        <button onClick={handlePost}>Post Quote</button>
       </div>
     </>
   );
