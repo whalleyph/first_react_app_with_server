@@ -4,6 +4,10 @@ import axios from "axios";
 
 function App() {
   const [data, setData] = React.useState(null);
+  const [newQuoteInfo, setNewQuoteInfo] = React.useState({
+    text: "",
+    author: "",
+  });
 
   async function handleClick() {
     const allQuotes = await axios.get(
@@ -20,6 +24,11 @@ function App() {
         <p>{data && "'" + data.text + "'"}</p>
         <p>{data && data.author}</p>
         <button onClick={handleClick}>Get Random Quote</button>
+      </div>
+      <div className="quotePoster">
+        <input placeholder="Quote"></input>
+        <input placeholder="Author"></input>
+        <button>Post Quote</button>
       </div>
     </>
   );
