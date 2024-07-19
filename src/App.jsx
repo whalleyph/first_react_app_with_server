@@ -5,18 +5,21 @@ import axios from "axios";
 function App() {
   const [quote, setQuote] = React.useState(null);
   const [newQuoteInfo, setNewQuoteInfo] = React.useState(createEmptyQuote());
+  const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+  if (!apiBaseURL) {
+    throw new Error("missing import.meta.env.VITE_API_BASE_URL");
+  }
+  const url = apiBaseURL + "/messages";
 
   function createEmptyQuote() {
     return {
       text: "",
       author: "",
-    }
+    };
   }
 
-  async function handleGet() {
-    const allQuotes = await axios.get(
-      "https://web-server-with-sql.onrender.com/messages"
-    );
+  async function handleGetQuotesFromAPI() {
+    const allQuotes = await axios.get(url);
     const randomDataIndex = Math.floor(Math.random() * allQuotes.data.length);
     setQuote(allQuotes.data[randomDataIndex]);
   }
@@ -29,11 +32,8 @@ function App() {
     }));
   }
 
-  async function handlePost() {
-    await axios.post(
-      "https://web-server-with-sql.onrender.com/messages",
-      newQuoteInfo
-    );
+  async function handlePostQuoteToAPI() {
+    await axios.post(url, newQuoteInfo);
     setNewQuoteInfo(createEmptyQuote());
   }
 
@@ -43,7 +43,7 @@ function App() {
       <div className="quoteGetter">
         <p>{quote && "'" + quote.text + "'"}</p>
         <p>{quote && quote.author}</p>
-        <button onClick={handleGet}>Get Random Quote</button>
+        <button onClick={handleGetQuotesFromAPI}>Get Random Quote</button>
       </div>
       <div className="quotePoster">
         <input
@@ -58,7 +58,7 @@ function App() {
           onChange={handleChange}
           name="author"
         ></input>
-        <button onClick={handlePost}>Post Quote</button>
+        <button onClick={handlePostQuoteToAPI}>Post Quote</button>
       </div>
     </>
   );
